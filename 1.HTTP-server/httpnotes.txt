@@ -1,0 +1,114 @@
+📌 Simple HTTP Log Server – Notes
+📁 Modules Used
+const http = require("http");
+const fs = require("fs");
+
+
+http module → Node.js ka built-in module, web server banane ke kaam aata hai
+
+fs module → file system ke saath kaam (file read/write)
+
+🌐 Server Creation
+const myServer = http.createServer((req, res) => {
+
+
+http.createServer()
+→ ek HTTP server banata hai
+
+Iske andar jo function hai usse request handler bolte hain
+
+Ye handler har incoming request pe call hota hai
+
+Handler ke parameters:
+
+req → client se aayi request (URL, method, headers)
+
+res → client ko response bhejne ke liye
+
+📝 Logging Logic
+const log = `${Date.now()}:${req.url} New Req Received\n`;
+
+
+Date.now() → current timestamp
+
+req.url → kis route pe request aayi (/, /about, etc.)
+
+Ek line bana ke log file me likhne ke liye
+
+fs.appendFile("log.txt", log, (err, data) => {
+
+
+appendFile → file ke end me data add karta hai
+
+Asynchronous hai (blocking nahi)
+
+Agar log.txt nahi hogi → automatically create ho jaayegi
+
+🚦 Routing (URL Handling)
+switch(req.url){
+    case '/':
+        res.end("Hello you are in Home page");
+        break;
+    case '/about':
+        res.end("I am Yash Gupta");
+        break;
+    default:
+        res.end("404 Not Found");
+}
+
+
+Ye simple manual routing hai
+
+req.url ke base pe response decide hota hai
+
+res.end()
+→ response bhej ke connection close karta hai
+→ har request me sirf ek baar call hona chahiye
+
+🚀 Server Start
+myServer.listen(8000, () => {
+    console.log("Server Started!");
+});
+
+
+Server port 8000 pe run karega
+
+Browser me test:
+
+http://localhost:8000/
+
+http://localhost:8000/about
+
+🧠 Flow Samajh Lo (Very Important)
+
+Browser request bhejta hai
+
+createServer ka handler run hota hai
+
+Request ka log log.txt me save hota hai
+
+URL ke hisaab se response milta hai
+
+Connection close
+
+⚠️ Important Observations
+
+fs.appendFile async hai → server block nahi hota
+
+Abhi error handling nahi likhi (production me zaroori hoti hai)
+
+Express.js isi ka advanced version hai (routing + middleware easy bana deta hai)
+
+🧠 Real-Life Analogy (Bonus 😄)
+
+Soch:
+
+http server = watchman
+
+req = visitor slip
+
+res = reply gate se
+
+log.txt = register jisme entry likhi ja rahi hai
+
+Har visitor ka naam + time likha ja raha hai 📒
