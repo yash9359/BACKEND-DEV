@@ -1,0 +1,334 @@
+🌐 URL (Uniform Resource Locator) – Complete Notes
+1️⃣ URL kya hota hai?
+
+URL ka full form hota hai:
+
+Uniform Resource Locator
+
+Simple language me:
+
+URL ek address hota hai jo browser ko batata hai ki
+resource (page, data, API) kahan hai aur kaise lana hai
+
+🧠 Analogy (bonus, jaise tumhe pasand hai):
+URL = Ghar ka address
+
+Path = ghar ka room
+
+Query = room ke andar kya chahiye (extra instructions)
+
+2️⃣ Ek complete URL ka example
+http://localhost:8000/search?search_req=nodejs&level=beginner
+
+
+Is URL ke parts hote hain 👇
+
+3️⃣ URL ke main parts
+🔹 1. Protocol
+http
+
+
+Batata hai:
+
+data kaise transfer hoga
+
+http / https / ftp etc.
+
+🔹 2. Host (Domain / IP)
+localhost
+
+
+Batata hai:
+
+server kahan chal raha hai
+
+🔹 3. Port
+8000
+
+
+Batata hai:
+
+server kis gate (port) par sun raha hai
+
+⭐ Sabse IMPORTANT (Tumhare question ke liye)
+4️⃣ Path kya hota hai? 🛣️
+👉 Path ka matlab:
+
+Server ke andar kaunsa route / page / resource chahiye
+
+Example:
+/search
+/about
+/
+
+
+URL me:
+
+http://localhost:8000/search
+
+
+Code me:
+
+myUrl.pathname
+
+
+Output:
+
+"/search"
+
+
+📌 Path se routing hoti hai
+
+switch(myUrl.pathname){
+  case "/":
+  case "/about":
+  case "/search":
+}
+
+5️⃣ Query kya hota hai? ❓
+👉 Query ka matlab:
+
+Path ko extra data / instructions dena
+
+Query hamesha:
+
+? se start hoti hai
+
+key=value format me hoti hai
+
+Example URL:
+/about?myname=Yash
+
+
+Isme:
+
+Path 👉 /about
+
+Query 👉 myname=Yash
+
+Multiple query example:
+/search?search_req=nodejs&level=beginner
+
+
+Query parts:
+
+{
+  search_req: "nodejs",
+  level: "beginner"
+}
+
+6️⃣ Query ko Node.js me kaise read karte hain?
+const myUrl = url.parse(req.url, true);
+
+true ka role 🔑
+
+Query ko string se object bana deta hai
+
+myUrl.query.search_req
+
+7️⃣ Path vs Query (Clear difference)
+Feature	Path	Query
+Kya batata hai	Kaunsa page / route	Page ko kya data chahiye
+URL me hota hai	/search	?key=value
+Change hota hai	Rarely	Frequently
+Node.js me	pathname	query
+8️⃣ Tumhare code ke examples
+🏠 Home
+http://localhost:8000/
+
+
+Path: /
+
+Query: ❌
+
+👤 About page
+http://localhost:8000/about?myname=Yash
+
+myUrl.pathname // "/about"
+myUrl.query.myname // "Yash"
+
+🔍 Search
+http://localhost:8000/search?search_req=nodejs
+
+myUrl.query.search_req // "nodejs"
+
+9️⃣ URL without query vs with query
+❌ Without query
+/about
+
+✅ With query
+/about?myname=Yash
+
+
+📌 Same path, different data
+
+🔟 One-line Interview Answer 💯
+
+URL ek address hota hai jisme path batata hai kaunsa resource chahiye aur query us resource ko extra data provide karti hai.
+
+🧠 Final Analogy (Yaad rakhne ke liye)
+
+URL = Restaurant
+
+Path = Kaunsa counter
+
+Query = Order details
+
+/order?item=pizza&size=large
+
+
+
+
+
+/////////////////////////////////// about code
+
+
+
+
+
+📌 URL Module (Node.js) – Notes
+1️⃣ URL module kya hota hai?
+
+url module Node.js ka built-in module hai jo request ke URL ko tod-tod (parse) karke hume useful information deta hai.
+
+Socho URL ek parcel hai 📦
+url.parse() us parcel ko khol ke alag-alag cheezein nikal deta hai.
+
+2️⃣ URL module import kaise karte hain?
+const url = require("url");
+
+
+Ye batata hai Node ko ki hume URL parsing wali functionality chahiye.
+
+3️⃣ url.parse() kya karta hai?
+const myUrl = url.parse(req.url, true);
+
+
+👉 Ye string URL ko object me convert kar deta hai.
+
+Example request:
+
+http://localhost:8000/about?myname=Yash
+
+
+Parse hone ke baad:
+
+{
+  pathname: "/about",
+  query: { myname: "Yash" },
+  ...
+}
+
+4️⃣ true kyun pass kiya?
+url.parse(req.url, true)
+
+
+true ka matlab → query string ko object bana do
+
+Agar true nahi likhte to:
+
+query: "myname=Yash"
+
+
+true likhne se:
+
+query: { myname: "Yash" }
+
+
+📌 Isliye hamesha query access karni ho to true likhna best practice hai.
+
+5️⃣ Important URL properties (JO TUM USE KAR RAHE HO)
+🔹 myUrl.pathname
+myUrl.pathname
+
+
+URL ka route / path batata hai
+
+Example:
+
+/about
+/search
+/
+
+
+👉 Isi ke basis par hum switch case lagate hain.
+
+🔹 myUrl.query
+myUrl.query
+
+
+URL ke query parameters deta hai (object form me)
+
+Example:
+
+/about?myname=Yash
+
+myUrl.query.myname // "Yash"
+
+6️⃣ Tumhare code me URL ka flow
+🔹 Step 1: Request aayi
+req.url
+
+
+Example:
+
+/search?search_req=nodejs
+
+🔹 Step 2: URL parse hua
+const myUrl = url.parse(req.url, true);
+
+🔹 Step 3: Pathname check hua
+switch (myUrl.pathname)
+
+
+/ → Home page
+
+/about → Username print
+
+/search → Search result
+
+7️⃣ Real examples from your code
+🏠 Home page
+http://localhost:8000/
+
+myUrl.pathname === "/"
+
+👤 About page with query
+http://localhost:8000/about?myname=Yash
+
+myUrl.query.myname // "Yash"
+
+
+Response:
+
+Hi, Yash
+
+🔍 Search page
+http://localhost:8000/search?search_req=nodejs
+
+myUrl.query.search_req // "nodejs"
+
+
+Response:
+
+Here are your result of Search nodejs
+
+8️⃣ req.url vs myUrl.pathname
+Thing	Kya deta hai
+req.url	Full URL with query
+myUrl.pathname	Sirf route
+myUrl.query	Query params object
+9️⃣ Favicon wali line kyun?
+if (req.url === "/favicon.ico") return res.end();
+
+
+Browser automatically favicon maangta hai 🧠
+Ye line:
+
+Extra log entry ko avoid karti hai
+
+Console clean rakhti hai
+
+🔟 One-line summary (Interview ready 💯)
+
+Node.js ka URL module incoming request ke URL ko parse karke pathname aur query parameters alag-alag provide karta hai, jisse routing aur dynamic data handling easy ho jati hai.
