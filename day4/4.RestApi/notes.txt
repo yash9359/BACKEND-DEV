@@ -1,0 +1,3 @@
+// Rest api
+
+type of api which have some sortof rules

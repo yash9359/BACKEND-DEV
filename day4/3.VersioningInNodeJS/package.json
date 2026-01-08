@@ -1,0 +1,15 @@
+{
+  "name": "3.versioninginnodejs",
+  "version": "1.0.0",
+  "description": "",
+  "license": "ISC",
+  "author": "Yash",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "express": "^5.2.1"
+  }
+}
