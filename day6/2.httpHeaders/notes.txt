@@ -1,0 +1,172 @@
+📘 HTTP HEADERS – COMPLETE NOTES (Express)
+🔹 Headers kya hote hain?
+
+Headers = request / response ke saath jaane wali extra information
+
+👉 Data nahi
+👉 Metadata (data ke baare me data)
+
+🧠 Analogy:
+
+Courier box = body
+Box ke upar chipka label = headers
+(From, To, Fragile, Weight)
+
+🔹 Headers kahan hote hain?
+
+Headers dono jagah hote hain:
+
+1️⃣ Request Headers (Client → Server)
+
+Browser / Postman bhejta hai
+
+2️⃣ Response Headers (Server → Client)
+
+Express bhejta hai
+
+🔹 Request Headers (Tera code)
+app.get("/api/users", (req, res) => {
+    console.log(req.headers);
+});
+
+Output me kya milega?
+{
+  host: 'localhost:8000',
+  connection: 'keep-alive',
+  user-agent: 'Mozilla/5.0...',
+  accept: '*/*',
+  content-type: 'application/json'
+}
+
+
+📌 req.headers ek object hota hai
+📌 Isse pata chalta hai:
+
+Request kahan se aayi
+
+Kis type ka data hai
+
+Kis device / browser se
+
+🔹 Common Request Headers
+Header	Meaning
+Content-Type	Data ka type
+Authorization	Token / login
+User-Agent	Browser info
+Accept	Kya response chahiye
+Host	Server address
+🔹 Content-Type (IMPORTANT ⭐)
+Content-Type: application/json
+
+
+👉 Server ko batata hai:
+
+Body JSON hai, form hai ya file
+
+Example:
+
+application/json
+
+application/x-www-form-urlencoded
+
+multipart/form-data
+
+📌 Isliye middleware chahiye:
+
+app.use(express.urlencoded({ extended: false }));
+
+🔹 Response Headers (Server → Client)
+
+Tera code:
+
+res.setHeader("X-myName", "Yash Gupta");
+
+
+👉 Ye custom response header bhej raha hai
+
+📌 Browser / client ko milega:
+
+X-myName: Yash Gupta
+
+🔹 Custom Headers rule
+
+✅ Hamesha X- se start karo
+
+X-myName
+X-auth-token
+X-user-role
+
+
+❌ Reserved headers avoid karo:
+
+Content-Type
+Host
+Content-Length
+
+🔹 Response headers kyun use hote hain?
+
+Auth token bhejne
+
+Rate limit batane
+
+Server info
+
+Pagination info
+
+Security rules
+
+🔹 res.setHeader vs res.header
+res.setHeader("X-test", "123"); // Node style
+res.header("X-test", "123");    // Express style
+
+
+👉 Dono same kaam karte hain
+
+🔹 Headers vs Body (Difference)
+Headers	Body
+Metadata	Actual data
+Small info	Large data
+req.headers	req.body
+Fast access	Parsing needed
+🔹 Flow samajh le (Very Important)
+Client
+  |
+  |--- Headers + Body --->
+  |
+Server Middleware
+  |
+  |--- Route Handler --->
+  |
+  |--- Headers + Body --->
+  |
+Client
+
+🔹 Interview One-Liners ⭐
+
+✔️ Headers are metadata sent along with HTTP requests and responses.
+
+✔️ req.headers gives incoming request headers.
+
+✔️ res.setHeader() is used to send custom response headers.
+
+✔️ Headers are used for authentication, content type, and security.
+
+🔹 Real-life use cases
+
+JWT token → Authorization header
+
+Pagination → X-total-count
+
+Rate limit → X-rate-limit
+
+CORS → Access-Control-Allow-Origin
+
+🔹 Ek common mistake ❌
+res.json(data);
+res.setHeader("X-test", "1"); // ❌ late ho gaya
+
+
+✅ Correct:
+
+res.setHeader("X-test", "1");
+res.json(data);
