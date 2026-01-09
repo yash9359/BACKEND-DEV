@@ -1,0 +1,161 @@
+Http response status code
+1. 100 - 199 = informationnal
+2.200-299 = successfull
+3.300-399 = Redirectional
+4.400-499 = cient error
+5. 500 - 599 = Server error response
+
+
+kuch bhi edit ke baad hme baar baar server bnd karke chalu karna padta usse bachne ke 
+liyee hmm package nodemon ka use karnege
+
+
+
+HTTP Response Status Codes (Full clear)
+1️⃣ 100 – 199 : Informational
+
+👉 “Bas bata raha hoon, kaam chal raha hai”
+
+Examples:
+
+100 Continue →
+“Request mil gayi, aage bhejo”
+
+🧠 Real life:
+Zomato bolta hai: “Order received” 🍔
+
+👉 Rarely use hote hain backend me
+
+2️⃣ 200 – 299 : Success
+
+👉 “Kaam ho gaya bhai ✅”
+
+Common codes:
+✅ 200 OK
+
+GET request successful
+
+res.status(200).json(users);
+
+
+🧠 Analogy:
+Parcel mil gaya 📦
+
+✅ 201 Created
+
+Naya data create hua (POST)
+
+res.status(201).json({ status: "success" });
+
+
+🧠 Analogy:
+New account ban gaya 🆕
+
+✅ 204 No Content
+
+Kaam ho gaya, response body nahi
+
+🧠
+Delete ho gaya, par kuch dikhana nahi
+
+3️⃣ 300 – 399 : Redirection
+
+👉 “Idhar nahi, udhar jao”
+
+Example:
+
+301 Moved Permanently
+
+302 Found
+
+🧠 Analogy:
+Dukaan shift ho gayi 🏪➡️
+
+⚠️ Express me kam use hota hai
+
+4️⃣ 400 – 499 : Client Error
+
+👉 “Galti client ki hai ❌”
+
+🚫 400 Bad Request
+
+Required fields missing
+
+res.status(400).json({ msg: "All fields required" });
+
+
+🧠
+Form adhoora bhar diya
+
+🚫 401 Unauthorized
+
+Login nahi kiya
+
+🧠
+Gate pass nahi hai 🔐
+
+🚫 403 Forbidden
+
+Permission nahi
+
+🧠
+Pass hai, par entry mana ❌
+
+🚫 404 Not Found
+
+Data / route nahi mila
+
+res.status(404).json({ error: "Invalid id" });
+
+
+🧠
+Address galat 🏠
+
+🚫 409 Conflict
+
+Duplicate data
+
+🧠
+Email already registered
+
+5️⃣ 500 – 599 : Server Error
+
+👉 “Galti meri hai 😭 (server)”
+
+💥 500 Internal Server Error
+
+Code crash
+
+fs error
+
+try/catch miss
+
+res.status(500).json({ error: "Something went wrong" });
+
+
+🧠
+Chef gir gaya kitchen me 👨‍🍳
+
+🧠 One-look table (Yaad rakhne ke liye)
+Range	Meaning
+1xx	Info
+2xx	Success
+3xx	Redirect
+4xx	Client mistake
+5xx	Server mistake
+🔥 Tumhare code ke correct status usage
+Case	Status
+GET success	200
+POST create	201
+Missing fields	400
+Invalid ID	404
+Server crash	500
+❌ Common mistake (Tumne pehle kiya tha)
+402 Payment Required ❌
+
+
+👉 Ye backend CRUD me almost kabhi use nahi hota
+
+🧠 Final ek line me
+
+Status code = server ka mood batane ka tareeka 😄
