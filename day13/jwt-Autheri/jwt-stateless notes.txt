@@ -1,0 +1,140 @@
+Authentication ka matlab kya hota hai?
+
+Authentication = “Kya tum wahi ho jo tum bol rahe ho?”
+
+Jaise:
+
+App poochta hai: “Tum Yash ho?”
+
+Tum bolte ho: “Haan”
+
+App verify karta hai
+
+1️⃣ Stateful Authentication (SESSION SYSTEM)
+Basic idea
+
+👉 Server tumhe yaad rakhta hai
+
+Step-by-step (bilkul seedha)
+Step 1: Tum login karte ho
+
+Email + password dete ho
+
+Server check karta hai (sahi hai ya nahi)
+
+Step 2: Server ek number deta hai
+
+Is number ko bolte hain session ID
+
+Session ID = 123XYZ
+
+Step 3: Server yaad rakhta hai
+
+Server apne paas likh leta hai:
+
+123XYZ → Yash
+
+
+👉 Ye likhna = state rakhna
+
+Step 4: Browser ko sirf number milta hai
+
+Browser ke paas hota hai:
+
+cookie: sessionId=123XYZ
+
+Step 5: Tum agla page open karte ho
+
+Browser automatically cookie bhej deta hai
+
+Server bolta hai:
+
+“Session ID 123XYZ?”
+
+“Achha, ye to Yash hai”
+
+Isko STATEFUL kyu bolte hain?
+
+Kyunki server yaad rakhta hai:
+
+“Ye session kis user ka hai”
+
+Simple example
+
+🧾 Movie theatre ticket system
+
+Ticket number = session ID
+
+Theatre ke paas list = state
+
+Ticket dikhao → entry
+
+2️⃣ Stateless Authentication (TOKEN / JWT)
+Basic idea
+
+👉 Server tumhe yaad nahi rakhta
+
+Step-by-step
+Step 1: Tum login karte ho
+
+Email + password
+
+Step 2: Server ek card de deta hai
+
+Is card ko bolte hain token
+
+Card ke andar likha hota hai:
+
+Name: Yash
+Expiry: 10 PM
+
+Step 3: Server bolta hai
+
+“Ab mai kuch yaad nahi rakhunga,
+jab bhi aao, card dikha dena”
+
+Step 4: Tum har request me card dikhate ho
+
+Server sirf padhta hai:
+
+Card asli hai?
+
+Expired to nahi?
+
+Bas ✔️
+
+Isko STATELESS kyu bolte hain?
+
+Kyunki server kuch store nahi karta
+Sab info token ke andar hoti hai
+
+Simple example
+
+✈️ Airport boarding pass
+
+Pass ke andar sab info
+
+Counter tumhe pehle se yaad nahi rakhta
+
+🔁 Side-by-side (ek nazar me)
+Baat	Stateful	Stateless
+Server yaad rakhta?	Haan	Nahi
+Browser me kya hota	Session ID	Token
+Logout easy	Haan	Mushkil
+Scale easy	Nahi	Haan
+Beginner friendly	Haan	Thoda tough
+🧠 Ek line me yaad rakh
+
+Stateful → “Server yaad rakhta hai”
+
+Stateless → “Server nahi yaad rakhta”
+
+Agar chaho to next:
+
+sirf diagram ke saath
+
+ya real code example
+
+ya sirf interview answers
+
+Bolo, kaise aur samjhau? 😊
