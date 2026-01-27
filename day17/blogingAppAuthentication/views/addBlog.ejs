@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <%- include("./partials/head.ejs") %>
+        <title>HomePage</title>
+</head>
+
+<body>
+    <%- include("./partials/nav.ejs") %>
+
+        <div class="container">
+
+            <form action="/blog" method="POST" enctype="multipart/form-data">
+
+                <div class="mb-3 mt-4">
+                    <label for="coverImage" class="form-label">Cover Image</label>
+                    <input type="file"
+                     class="form-control " 
+                      id="coverImage" 
+                       name="coverImage" 
+                       aria-describedby="emailHelp">
+                    <div id="emailHelp" class="form-text"></div>
+                </div>
+
+
+
+                <div class="mb-3">
+                    <label for="title" class="form-label">Title</label>
+                    <input type="text"
+                     class="form-control"
+                      id="title" 
+                       name="title" 
+                       aria-describedby="emailHelp">
+                    <div id="emailHelp" class="form-text"></div>
+                </div>
+
+
+                 <div class="mb-3">
+                    <label for="body" >Body</label>
+                    <textarea name = "body" class="form-control" placeholder="Leave a comment here" id="floatingTextarea2" style="height: 100px"></textarea>
+                    
+                </div>
+                 <div class="mb-3">
+                    <button class="btn btn-primary" type="submit">Submit</button>
+                    
+                </div>
+            </form>
+
+        </div>
+
+        <%- include("./partials/scripts.js") %>
+</body>
+
+</html>

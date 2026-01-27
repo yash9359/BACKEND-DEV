@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <%- include("./partials/head.ejs") %>
+    <title>Home</title>
+
+    <style>
+        body {
+            background: #0f0f10;
+            color: #eaeaea;
+        }
+
+        .page-title {
+            font-size: 2.2rem;
+            font-weight: 600;
+            letter-spacing: -0.5px;
+        }
+
+        .blog-card {
+            background: #151517;
+            border-radius: 22px;
+            border: 1px solid rgba(255,255,255,0.06);
+            overflow: hidden;
+            transition: all 0.35s ease;
+        }
+
+        .blog-card:hover {
+            transform: translateY(-6px);
+            border-color: rgba(255,255,255,0.12);
+        }
+
+        .blog-card img {
+            height: 210px;
+            object-fit: cover;
+            filter: saturate(0.95) contrast(1.05);
+        }
+
+        .card-body {
+            padding: 1.4rem;
+        }
+
+        .blog-title {
+            font-size: 1.05rem;
+            font-weight: 500;
+            line-height: 1.4;
+            margin-bottom: 0.4rem;
+        }
+
+        .blog-sub {
+            font-size: 0.85rem;
+            color: #9ca3af;
+            margin-bottom: 1.2rem;
+        }
+
+        .view-link {
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: #ffffff;
+            opacity: 0.85;
+            transition: opacity 0.2s ease;
+        }
+
+        .view-link:hover {
+            opacity: 1;
+        }
+    </style>
+</head>
+
+<body>
+
+    <%- include("./partials/nav.ejs") %>
+
+    <div class="container mt-5 mb-5">
+        <div class="text-center mb-5">
+            <h1 class="page-title">Latest Writing</h1>
+            <p class="text-secondary mt-2">Thoughts, stories & ideas</p>
+        </div>
+
+        <div class="row g-4">
+            <% blogs.forEach(blog => { %>
+
+                <div class="col-lg-3 col-md-4 col-sm-6">
+                    <div class="blog-card h-100">
+
+                        <img 
+                            src="<%= blog.coverImageURL %>" 
+                            class="w-100"
+                            alt="Blog image"
+                        >
+
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="blog-title">
+                                <%= blog.title %>
+                            </h5>
+
+                            <div class="blog-sub">
+                                Read full article
+                            </div>
+
+                            <a 
+                                href="/blog/<%= blog._id %>" 
+                                class="view-link mt-auto">
+                                Read →
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+            <% }) %>
+        </div>
+    </div>
+
+    <%- include("./partials/scripts.js") %>
+</body>
+</html>

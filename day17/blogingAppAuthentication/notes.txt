@@ -1,0 +1,482 @@
+📌 Mongoose User Schema + Password Hashing (Notes)
+1️⃣ Imports samjho (Foundation)
+const { Schema, model } = require("mongoose");
+const { createHmac, randomBytes } = require("crypto");
+
+👉 Kya ho raha hai?
+
+Schema → structure batata hai document ka
+
+model → schema ko MongoDB collection se connect karta hai
+
+crypto → password ko secure banane ke liye
+
+randomBytes → random salt generate karta
+
+createHmac → hashing algorithm (SHA-256)
+
+🧠 Analogy:
+Password = tala 🔐
+Salt = extra secret key 🗝️
+Hash = tala lagane ke baad jo shape banti hai
+
+2️⃣ userSchema ka structure
+const userSchema = new Schema({
+
+
+Ye batata hai User document me kaun-kaun se fields honge
+
+🔹 fullName
+fullName: {
+    type: String,
+    required: true,
+}
+
+
+String hona chahiye
+
+Mandatory hai
+
+Agar missing → MongoDB error dega
+
+🔹 email
+email: {
+    type: String,
+    required: true,
+    unique: true,
+}
+
+
+Required hai
+
+unique → same email do baar insert nahi hoga
+
+⚠️ Note:
+unique = index create karta hai
+Validation nahi, duplicate aane pe DB error throw hota hai
+
+🔹 salt
+salt: {
+    type: String,
+}
+
+
+Random value
+
+Har user ka alag
+
+Password hashing ko strong banata hai
+
+🧠 Why salt?
+Same password hone ke baad bhi hash alag rahe
+
+🔹 password
+password: {
+    type: String,
+    required: true,
+}
+
+
+⚠️ Important:
+
+Yaha plain password store nahi hota
+
+Save hone se pehle hash ban jata hai (pre hook)
+
+🔹 profileImageURL
+profileImageURL: {
+    type: String,
+    default: "/images/default.png",
+}
+
+
+Agar user image upload na kare
+
+Default image assign ho jaayegi
+
+🔹 role
+role: {
+    type: String,
+    enum: ["USER", "ADMIN"],
+    default: "USER"
+}
+
+👉 Enum ka matlab
+
+Sirf "USER" ya "ADMIN" allowed
+
+"user", "admin", "MOD" ❌ reject
+
+🧠 Analogy:
+Enum = allowed options ka gatekeeper 🚪
+
+🔹 timestamps
+}, { timestamps: true });
+
+
+Automatically add karega:
+
+createdAt
+
+updatedAt
+
+3️⃣ pre("save") middleware (MOST IMPORTANT)
+userSchema.pre("save", function(next) {
+
+👉 Ye kab chalta hai?
+
+Jab bhi user.save() ya User.create() call hota hai
+
+DB me save hone se pehle
+
+🔹 this kya hai?
+const user = this;
+
+
+this = current user document
+
+🔹 Password dobara hash hone se bachao
+if (!user.isModified("password")) return;
+
+
+🧠 Why needed?
+
+Agar user sirf email update kare
+
+Password dobara hash ho gaya → login fail ❌
+
+⚠️ Bug alert:
+Yaha return; ke baad next() call nahi hua
+Best practice 👇
+
+if (!user.isModified("password")) return next();
+
+🔹 Salt generate karna
+const salt = randomBytes(16).toString();
+
+
+16 bytes ka random data
+
+Har user ke liye unique
+
+🔹 Password hash karna
+const hashedPassword = createHmac('sha256', salt)
+    .update(user.password)
+    .digest("hex");
+
+Process:
+
+Algorithm → sha256
+
+Secret key → salt
+
+Input → plain password
+
+Output → hashed string
+
+🔹 DB me save kya hota hai?
+user.salt = salt;
+user.password = hashedPassword;
+
+
+✔️ Plain password ❌
+✔️ Salt + Hash ✔️
+
+🔹 next() (IMPORTANT BUG)
+
+Tumne likha:
+
+next;
+
+
+❌ Ye function call nahi hai
+
+✔️ Sahi code:
+
+next();
+
+
+Agar next() nahi call hua:
+
+Request hang ho jaayegi
+
+Save complete nahi hoga
+
+4️⃣ Model banana
+const User = model("user", userSchema);
+
+
+Collection name → users
+
+Schema → userSchema
+
+5️⃣ Export
+module.exports = User;
+
+
+Ab kahin bhi use kar sakte ho:
+
+const User = require("./models/user");
+
+6️⃣ 🔥 Common Mistakes Summary
+
+❌ next; likhna
+❌ isModified ke baad next() na call karna
+❌ Plain password store karna
+❌ Enum ignore karna
+
+7️⃣ One-line intuition (Yaad rakhne ke liye)
+
+User save hone se pehle password ko salt + hash ke saath lock kar diya jaata hai, taaki database hack ho jaaye phir bhi password safe rahe 🔐
+
+Agar chaaho next:
+
+
+🔐 Salt alag se kyun save karte hain?
+Short answer:
+
+Kyuki login ke time wahi salt dubara chahiye hota hai
+
+🔁 Password ka poora flow (samajhne ke liye)
+🟢 Signup time
+Password (plain)
++ Random Salt
+→ Hash
+→ DB me (salt + hash) save
+
+
+Example:
+
+Password: 123456
+Salt: abcd1234
+Hash: 9f8a7e...
+
+
+DB me:
+
+{
+  salt: "abcd1234",
+  password: "9f8a7e..."
+}
+
+🔵 Login time
+
+User sirf ye bhejta hai:
+
+email + password
+
+
+Server karta hai:
+
+hash(inputPassword + storedSalt)
+
+
+Agar:
+
+newHash === storedHash
+
+
+👉 Login success ✅
+
+❓ Ab sawaal:
+
+Salt agar save hi nahi kiya to?
+
+❌ Problem
+
+Hash dobara kaise banega?
+
+Har baar random salt generate hoga
+
+Hash kabhi match nahi karega
+
+🧠 Math analogy
+Agar tumne kaha:
+
+A + B = C
+
+
+Aur B hi bhool gaye 🤦‍♂️
+To C dobara kaise niklega?
+
+🔥 Important Security Reason (Real Danger)
+🚨 Without salt (dangerous)
+password = 123456
+hash = X
+
+
+1000 users ka same password → same hash 😱
+
+Hacker bolega:
+
+“Arre sabka password same lag raha hai”
+
+🛡️ With salt (safe)
+User1: 123456 + salt1 → hash1
+User2: 123456 + salt2 → hash2
+
+
+Same password ❌
+Same hash ❌
+
+🧠 Analogy
+Same lock 🔐
+Par har lock ki key 🗝️ alag
+
+❓ Hash ke andar salt kyun nahi rakha?
+
+Because:
+
+Hash one-way hota hai
+
+Usme se salt nikaal nahi sakte
+
+Verification ke time salt explicitly chahiye
+
+🔥 Interview One-liner (Yaad rakh)
+
+Salt is stored so that the same hashing process can be repeated during login for verification
+
+🧪 Extra Knowledge (Pro Level)
+bcrypt kya karta hai?
+
+bcrypt internally salt ko hash ke andar embed kar deta hai
+
+Tumhe alag se save nahi karna padta
+
+Isliye bcrypt easy lagta hai 😄
+
+❌ Common Beginner Mistakes
+
+❌ Same salt sab users ke liye
+❌ Login time new salt generate karna
+❌ Plain password save karna
+
+
+🔮 Kaise pehchaano: kaunsa function Promise return karta hai?
+🥇 RULE #1 (100% sure sign)
+👉 Jahan await kaam kar jaaye → Promise return ho raha hai
+await User.create(...)
+
+
+Agar ye kaam kar gaya, error nahi aaya →
+✔️ Promise hai
+
+❌ Agar Promise na hota:
+
+TypeError: await is only valid for Promise
+
+
+🧠 Shortcut:
+
+await = Promise detector
+
+🥈 RULE #2: async function hamesha Promise return karta hai
+async function test() {
+  return 10;
+}
+
+
+Actually returns:
+
+Promise.resolve(10)
+
+
+❌ Chahe tum kuch return hi na karo:
+
+async function test() {}
+
+
+Ye bhi Promise hi return karega.
+
+🧠 Yaad rakh:
+
+async = Promise wrapper
+
+🥉 RULE #3: Library docs / naming pattern
+Mongoose / DB / HTTP libs:
+
+create
+
+save
+
+find
+
+findOne
+
+updateOne
+
+findById
+
+👉 sab Promise return karte hain (modern versions)
+
+User.findOne({ email })
+
+
+Promise return karta hai ✔️
+
+🧪 RULE #4: .then() lag jaaye → Promise hai
+User.find().then(...)
+
+
+Agar .then() kaam kar gaya
+✔️ Promise
+
+⚠️ RULE #5: Callback parameter ho → mostly NOT Promise
+fs.readFile("a.txt", callback);
+
+
+Old Node style ❌
+
+But:
+
+fs.promises.readFile("a.txt");
+
+
+Promise ✔️
+
+🧠 Rule:
+
+callback = old async
+Promise = new async
+
+🧠 Tumhari exact confusion ka answer
+Tum soch rahe the:
+
+“pre('save') me function async kaha hai?”
+
+Reality:
+
+userSchema.pre("save", async function () {
+
+
+Yahan:
+
+async likha → Promise return
+
+Mongoose wait karta
+
+next() ki zarurat nahi
+
+🔥 Real-life debugging trick (PRO)
+const result = someFunction();
+
+console.log(result);
+
+
+Agar output aaye:
+
+Promise { <pending> }
+
+
+✔️ Promise confirmed
+
+🧠 Analogy (hamesha yaad rahegi)
+
+Sync function = normal chai ☕
+
+Callback async = chai order deke rukna 🧍
+
+Promise = token mil gaya 🎟️
+
+await = token dikhake chai lena 😄

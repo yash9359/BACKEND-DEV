@@ -1,0 +1,192 @@
+🔥 Multer = “File Uploader Middleware”
+Simple words:
+
+Multer = Express ka helper jo file ko request se nikaal ke server pe save karta hai
+
+🧠 Real-life example:
+
+Soch:
+
+Tu courier bhejta hai (📦 file)
+
+Address likha hota hai (server)
+
+Watchman hota hai gate pe (multer)
+
+Watchman:
+
+parcel leta hai
+
+naam dekhta hai
+
+sahi room me rakh deta hai
+
+👉 Watchman = Multer
+👉 Parcel = File
+👉 Room = Folder
+
+❓ Normal Express file kyu nahi samajhta?
+
+Form jab file bhejta hai to format hota hai:
+
+multipart/form-data
+
+
+Express sirf ye samajhta hai:
+
+application/json
+
+
+👉 Isliye Express bolta:
+
+“Bhai ye kya format hai, mujhe nahi pata”
+
+👉 Tab multer bolta:
+
+“De bhai, mai samajh leta hoon 😎”
+
+🧱 Multer ke 3 basic kaam hote hain
+1️⃣ File ko request se nikaalna
+2️⃣ Server pe save karna
+3️⃣ Uska info req.file me daalna
+🪜 Step-by-step flow (brain me picture bana)
+Step 1: User file select karta hai
+<input type="file" name="photo">
+
+Step 2: Form submit hota hai
+<form method="POST" enctype="multipart/form-data">
+
+
+📦 File request ke andar chali jaati hai
+
+Step 3: Request server pe aati hai
+
+Express bolta:
+
+“Bhai isme file hai, mujhe nahi aata handle karna”
+
+Step 4: Multer beech me aata hai 😎
+
+Multer bolta:
+
+“Ruk bhai, mai handle karta hoon”
+
+Step 5: Multer kya karta hai?
+
+File nikaalta hai request se
+
+Folder dekhta hai
+
+Naam banata hai
+
+File save karta hai
+
+req.file me info daal deta hai
+
+🧠 Visual Flow (simple)
+4
+🧩 Ab code ko samajhte hain (human language me)
+Ye line:
+const multer = require("multer");
+
+
+👉 Matlab:
+
+“Bhai ek helper laa jo file handle karta ho”
+
+Ye:
+const storage = multer.diskStorage({
+
+
+👉 Matlab:
+
+“File RAM me nahi, disk (folder) me save karni hai”
+
+Ye:
+destination: function(req, file, cb) {
+
+
+👉 Matlab:
+
+“File ko kaha rakhna hai wo yaha bataunga”
+
+Ye:
+cb(null, "./uploads");
+
+
+👉 Matlab:
+
+“Is folder me rakh de file”
+
+📂 uploads = almirah
+📄 file = kapda
+
+Ye:
+filename: function(req, file, cb) {
+
+
+👉 Matlab:
+
+“File ka naam kya rakhna hai”
+
+Ye:
+cb(null, Date.now() + "-" + file.originalname);
+
+
+👉 Matlab:
+
+“Time + original name = unique naam”
+
+🧱 Important line (jo sab bhoolte hain 😄)
+const upload = multer({ storage });
+
+
+👉 Matlab:
+
+“Multer ko bol diya:
+Bhai ye rules follow karna (storage rules)”
+
+🛣 Route me kya hota hai?
+router.post("/", upload.single("photo"), (req, res) => {
+
+
+👉 Matlab:
+
+“Is route pe agar file aaye,
+to pehle multer chalega,
+phir main function chalega”
+
+📦 Ab yaha kya milta hai?
+req.file  -> file info
+req.body  -> text data
+
+😄 Simple sentence me:
+
+Multer = request ke andar se file nikaal ke folder me rakhne wala banda
+
+🧠 Ultra-simple analogy:
+Real Life	Code
+Courier	Request
+Parcel	File
+Watchman	Multer
+Room	Folder
+Register	req.file
+🔥 ONE LINE DEFINITION (yaad rakhne layak):
+
+Multer Express ka middleware hai jo file upload handle karta hai
+
+
+
+Browser form submit
+ ↓
+checkAuth → req.user set
+ ↓
+multer → destination → filename
+ ↓
+folder create
+ ↓
+file save
+ ↓
+req.file available
+ ↓
+path MongoDB me save
