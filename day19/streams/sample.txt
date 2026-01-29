@@ -1,0 +1,178 @@
+Introduction
+
+Node.js ka asli power uski non-blocking nature me chhupa hota hai.
+Jab hum large data (files, videos, APIs) handle karte hain, tab Streams ka use performance ko kaafi improve kar deta hai.
+
+Is blog me hum samjhenge:
+
+Streams kya hoti hain
+
+Types of streams
+
+Express ke saath streams ka use
+
+Real-life example
+
+🤔 What are Streams in Node.js?
+
+Stream ek aisa mechanism hai jisme data thoda-thoda (chunks) me process hota hai, instead of pura data ek saath memory me load karna.
+
+Simple words me:
+
+❌ Normal way → pura data pehle load
+
+✅ Stream way → data flow hota rehta hai
+
+📌 Analogy
+
+Poora paani tanker me bharna ❌
+Pipe se paani aana ✔️ (yehi stream hai)
+
+🧩 Types of Streams in Node.js
+
+Node.js me mainly 4 types ke streams hote hain:
+
+1️⃣ Readable Stream
+
+👉 Jahan se data read hota hai
+Example:
+
+File read
+
+HTTP request
+
+
+
+mportance. But to maintain it is very hectic. So It is an approach that is used by tech giant & startups to make their codebase easy, maintainable & structured.
+
+Production Level Directory Setup for Backend
+If you use this approach it will drastically reduce the files' organization complexity & also be appreciated. So in this article, we'll explore production-level setup in detail, its advantages, and many more.
+
+What is the Backend?
+Backend refers to behind-the-scenes functionalities. It deals with server-side logic and complex calculations. It is responsible for managing and providing strong data, user authentication, creating and managing APIs, and providing them to the client side. The backend interacts with the database to store data. Here are some technologies that are helpful to construct the backend.
+
+Backend programming languages:  JavaScript (Node.js), Python (Django and Flask), PHP, Ruby (Ruby on Rails), etc.
+Database: MySQL, PostgreSQL, Oracle, SQLite, Microsoft SQL, MongoDB, Redis, Cassandra, etc.
+Why do we need a Production Level Directory Setup?
+In startup or tech projects, dealing with numerous files and folders can be overwhelming. To address this complexity, a production-level backend directory setup is crucial. It simplifies development by understandably organizing code, making it easier to manage and maintain. As the project expands, this structured approach ensures scalability without losing clarity. Collaboration within teams becomes smoother, debugging is simpler, and deployment is more efficient. Security is bolstered with protected storage of sensitive data, and version control is more effective. Consistency across projects facilitates developer transitions. In essence, a well-organized directory setup is a foundational practice that significantly boosts the efficiency and success of software development projects.
+
+Steps to create files & folders
+1. Root folder
+Make a root folder. It is generally your project name. For eg. I want to create a YouTube clone so my root folder name is YouTube Clone.
+
+2. Initialization
+Because we are using MERN stack technology to create the backend. So just open the terminal and type npm init. Here npm stands for node package manager & init for initialization. The complete statement says that we are initiating the node package in the root folder. As you enter the command it asks some questions like project name, author name, keywords, git repository, etc. After that, it creates a package.json file in the root folder with some pre-default code.
+
+3. README.md
+Now you should create a README.md file. It is because when you create a project in a team, all the members can read this file and better understand the project & its working.
+
+4. Gitkeep File
+As a backend developer, it usually occurs that you have to upload an image, video & file in your service database like AWS or Cloudinary. But in some cases, when the user uploads files or images due to some network issue or unresponsive browser has to re-upload the whole stuff again. So at the production level, to avoid this scenario, firstly files are uploaded on the server and after that, it uploaded to the database (AWS, cloudinary). So here we need to create a public folder & within this folder, we need to create a temp folder also. Within the temp folder, you must create a .gitkeep file. It is because when you push the codebase to github, Git Hub can't track empty folders. So without the .gitkeep file, the public folder remains untracked and can't be uploaded on Git Hub.
+
+5. Env File
+As a backend developer, you have to tackle a lot of APIs, secret keys, access tokens, expiry tokens, and user credentials (password, UPI). However, these credentials must not be displayed to the public & not be uploaded on Git Hub. So to hide these you need to create a .env file where env stands for environmental variable.
+
+6. Gitignore File
+As mentioned above, the .evn file must not uploaded on Git Hub. There is also another file that should not uploaded on GitHub like node modules. So to remain untracked these files, you have to create a .gitignore file & list out all the files & folders that you want to remain untracked.
+
+7. Src Folder
+All the above files are created in the root folders. But now the structure of making actual files & folders starts. These are the files that contain actual programming & business logic. In production, it is recommended that these files & folders be created within a folder named src ( source) for segregation of files.
+
+Now create three files name server.js, index.js & constant.js
+ 
+
+Screenshot-(83)
+Structure of files in vs code
+
+ 
+
+server.js:- code written to run the server.
+index.js:- code written to connect servers, databases & API's.
+constant.js :- code written to create & manage some constant variables.
+Besides files, we also need to create some folders named model, utils, middleware, db, route, and controller.
+DB:- code was written to make the database connection, whether the database is Mongo dB or MySQL.
+model:- code written to create a model & define structure to store data.
+middleware:- code written here which works between API request & controller. For eg. user verification.
+route:- all the route codes written here like "/login", "/post", "/sign".
+controller :- Actual core programming & business logic code written here.
+util:- code written which is used as utilities like email, uploading files.
+There may be slight differences in names & file count.
+
+Advantages of Production Level Directory Setup
+Easily accessing files: Because you organize files and folders in such a way that they will be easily accessed. For example, if you want to add a city category to the user model, then you have a clear and structured path: root > src > model > files.
+Easy to debug: In a large codebase, debugging is a very hectic thing. But in a structured manner, the organization makes it simple and easy to debug.
+Maintainability: As new versions come, the code base becomes more lengthy and heavy. Here adding a new feature, and updating the old codebase are included. This setup makes it easy.
+Segment work:  At tech giants like Google, Microsoft, and Meta, you don't work on a complete project. Here, you are assigned to work on a particular segment of a feature or project. In this scenario, it is also helpful.
+Must Read
+Android Project folder Structure
+Folder structure for a Node JS project
+Flutter – File Structure
+Conclusion
+It is an approach used by professionals to make the codebase more maintainable, easy to debug & update. It makes backend developers' life more simple. It reduces your codebase to be bulk & messy. Structural organization of files is also helpful to collaborate with your team members. It simplifies project organization, making codebase management and maintenance more straightforward. The systematic creation of files and folders adds clarity and simplicity to the development process making the software development process a success.
+
+Comment
+S
+
+sandeepxt99
+
+Follow
+
+Article Tags:
+GBlog
+Web Development Projects
+GBlog 2024
+GeeksforGeeks
+location
+Corporate & Communications Address:
+A-143, 7th Floor, Sovereign Corporate Tower, Sector- 136, Noida, Uttar Pradesh (201305)
+location
+Registered Address:
+K 061, Tower K, Gulshan Vivante Apartment, Sector 137, Noida, Gautam Buddh Nagar, Uttar Pradesh, 201305
+GFG App on Play Store
+GFG App on App Store
+Company
+About Us
+Legal
+Privacy Policy
+Careers
+Contact Us
+Corporate Solution
+Campus Training Program
+Explore
+POTD
+Practice Problems
+Connect
+Blogs
+90% Refund on Courses
+Tutorials
+Programming Languages
+DSA
+Web Technology
+AI, ML & Data Science
+DevOps
+CS Core Subjects
+GATE
+School Subjects
+Software and Tools
+Courses
+ML and Data Science
+DSA and Placements
+Web Development
+Data Science
+Programming Languages
+DevOps & Cloud
+GATE
+Trending Technologies
+Offline Centers
+Noida
+Bengaluru
+Pune
+Hyderabad
+Kolkata
+Preparation Corner
+Interview Corner
+Aptitude
+Puzzles
+GfG 160
+System Design
+@GeeksforGeeks, Sanchhaya Education Privat
