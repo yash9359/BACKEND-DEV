@@ -1,0 +1,211 @@
+
+Ye code kya hai?
+👉 Ye Node.js Cluster ka use karke Express server ko multi-core bana raha hai.
+Simple bolu to:
+Ek hi server → multiple Node processes → sab CPUs ka use 🔥
+
+Problem pehle samajh 👇
+❌ Normal Node.js
+
+
+Node.js single-threaded hota hai
+
+
+Ek time pe 1 CPU core use karta hai
+
+
+Baaki cores = idle 😴
+
+
+👉 Agar server pe:
+
+
+8 cores hain
+
+
+1000 users aaye
+
+
+to ek hi banda sabko serve kar raha 😵
+
+Cluster kya karta hai? (Real-life analogy 🧠)
+Soch:
+
+
+Restaurant me 1 cook (normal Node)
+
+
+Rush aaya → sab wait 😤
+
+
+Cluster =
+
+
+8 cooks (8 CPU cores)
+
+
+Load distribute 🔥
+
+
+Fast service ⚡
+
+
+
+Code ko line-by-line samjhte hain 👇
+1️⃣ Modules
+const cluster = require("node:cluster");
+const express = require("express");
+const os = require("os");
+
+
+
+cluster → multiple Node processes banane ke liye
+
+
+os → CPU cores count nikalne ke liye
+
+
+express → server
+
+
+
+2️⃣ CPU count
+const totalCPUs = os.cpus().length;
+
+👉 Machine me jitne cores hain
+Ex: 8 cores → 8 workers banenge
+
+3️⃣ Primary process (Boss 😎)
+if (cluster.isPrimary) {
+
+Primary ka kaam:
+
+
+Server handle ❌
+
+
+Workers create karna ✅
+
+
+for (let i = 0; i < totalCPUs; i++) {
+    const worker = cluster.fork();
+    console.log("Worker started with PID:", worker.process.pid);
+}
+
+👉 Har fork() ek new Node process banata hai
+👉 Har worker ka alag PID hota hai
+
+4️⃣ Worker process (Mazdoor 😅)
+else {
+
+Ye workers:
+
+
+Express server chalate hain
+
+
+Requests handle karte hain
+
+
+app.get("/", (req, res) => {
+    return res.json({ 
+        Message: `Hello from express server ${process.pid}` 
+    });
+});
+
+Try browser refresh kar:
+👉 Har baar alag PID milega
+Matlab request different worker ne serve ki 🔁
+
+PORT same hone pe clash kyu nahi hota? 🤯
+Ye magic hai 💫
+👉 Primary process:
+
+
+Port 8000 pe listen karta hai
+
+
+👉 Workers:
+
+
+Primary ke through request lete hain
+
+
+OS load balancing karta hai internally
+
+
+Isliye crash ❌ nahi hota
+
+Cluster kyu use karein?
+✅ Advantages
+
+
+🚀 All CPU cores use
+
+
+🔥 High traffic handle
+
+
+💥 Better performance
+
+
+💀 Ek worker crash ho → baaki alive
+
+
+❌ Disadvantages
+
+
+❗ Shared memory nahi hoti
+
+
+❗ Session / cache ke liye Redis chahiye
+
+
+❗ Code thoda complex
+
+
+
+Kab use karein? 🧠
+✅ Use Cluster jab:
+
+
+Heavy traffic
+
+
+CPU-intensive work
+
+
+Production server
+
+
+❌ Mat use karo jab:
+
+
+Small app
+
+
+Learning phase
+
+
+Low traffic
+
+
+
+TL;DR (One-liner 😎)
+
+Cluster = Node.js ko single CPU se multi-core superhero banana 🦸‍♂️
+
+
+Agar chaahe to next:
+
+
+🔥 Cluster vs PM2
+
+
+🔥 Cluster crash handling
+
+
+🔥 Real production setup (Redis + Cluster)
+
+
+Bol bas 👊
