@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Yash's AI</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    :root {
+      --bg-gradient-1: #0f172a;
+      --bg-gradient-2: #020617;
+      --card-bg: #020617;
+      --border-color: #1e293b;
+      --text-primary: #f8fafc;
+      --text-secondary: #94a3b8;
+      --text-tertiary: #64748b;
+      --user-bubble: linear-gradient(135deg, #4f46e5, #7c3aed);
+      --ai-bubble-bg: #020617;
+      --ai-bubble-border: #1e293b;
+      --ai-bubble-text: #e5e7eb;
+      --input-bg: #020617;
+      --input-border: #1e293b;
+      --input-focus: #6366f1;
+      --button-bg: linear-gradient(135deg, #6366f1, #8b5cf6);
+      --shadow-color: rgba(0,0,0,0.8);
+      --overlay-bg: rgba(15,23,42,0.9);
+    }
+
+    [data-theme="light"] {
+      --bg-gradient-1: #f8fafc;
+      --bg-gradient-2: #e0e7ff;
+      --card-bg: #ffffff;
+      --border-color: #e2e8f0;
+      --text-primary: #0f172a;
+      --text-secondary: #475569;
+      --text-tertiary: #64748b;
+      --user-bubble: linear-gradient(135deg, #6366f1, #8b5cf6);
+      --ai-bubble-bg: #f1f5f9;
+      --ai-bubble-border: #e2e8f0;
+      --ai-bubble-text: #1e293b;
+      --input-bg: #f8fafc;
+      --input-border: #cbd5e1;
+      --input-focus: #6366f1;
+      --button-bg: linear-gradient(135deg, #6366f1, #8b5cf6);
+      --shadow-color: rgba(0,0,0,0.1);
+      --overlay-bg: rgba(248,250,252,0.95);
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top, var(--bg-gradient-1), var(--bg-gradient-2));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      color: var(--text-primary);
+      transition: background 0.3s ease;
+    }
+
+    .chat-app {
+      width: 100%;
+      max-width: 420px;
+      height: 640px;
+      background: var(--card-bg);
+      border-radius: 20px;
+      border: 1px solid var(--border-color);
+      box-shadow:
+        0 30px 70px var(--shadow-color),
+        inset 0 1px 0 rgba(255,255,255,0.04);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      animation: fade 0.4s ease;
+      transition: all 0.3s ease;
+    }
+
+    @keyframes fade {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .header {
+      padding: 16px;
+      text-align: center;
+      border-bottom: 1px solid var(--border-color);
+      background: var(--card-bg);
+      position: relative;
+      transition: all 0.3s ease;
+    }
+
+    .header h1 {
+      margin: 0;
+      font-size: 1.05rem;
+      font-weight: 600;
+      letter-spacing: 0.3px;
+      color: var(--text-primary);
+    }
+
+    .header p {
+      margin: 4px 0 0;
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+    }
+
+    .theme-toggle {
+      position: absolute;
+      right: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 6px 10px;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: all 0.2s ease;
+    }
+
+    .theme-toggle:hover {
+      background: var(--ai-bubble-bg);
+      transform: translateY(-50%) scale(1.05);
+    }
+
+    .messages {
+      flex: 1;
+      padding: 18px;
+      overflow-y: auto;
+      background: linear-gradient(to bottom, var(--card-bg), var(--bg-gradient-2));
+      transition: background 0.3s ease;
+    }
+
+    .empty {
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      color: var(--text-tertiary);
+    }
+
+    .empty .logo {
+      font-size: 2.2rem;
+      margin-bottom: 10px;
+    }
+
+    .empty h2 {
+      margin: 0;
+      font-size: 1.1rem;
+      color: var(--text-primary);
+    }
+
+    .empty p {
+      margin-top: 6px;
+      font-size: 0.85rem;
+    }
+
+    .bubble {
+      max-width: 78%;
+      padding: 12px 14px;
+      margin-bottom: 12px;
+      border-radius: 14px;
+      font-size: 0.9rem;
+      line-height: 1.45;
+      white-space: pre-wrap;
+      animation: rise 0.25s ease;
+    }
+
+    @keyframes rise {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .user {
+      margin-left: auto;
+      background: var(--user-bubble);
+      color: #ffffff;
+      border-bottom-right-radius: 4px;
+    }
+
+    .ai {
+      margin-right: auto;
+      background: var(--ai-bubble-bg);
+      color: var(--ai-bubble-text);
+      border: 1px solid var(--ai-bubble-border);
+      border-bottom-left-radius: 4px;
+      transition: all 0.3s ease;
+    }
+
+    .typing {
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+      font-style: italic;
+      margin-bottom: 10px;
+    }
+
+    form {
+      display: flex;
+      gap: 10px;
+      padding: 14px;
+      border-top: 1px solid var(--border-color);
+      background: var(--overlay-bg);
+      backdrop-filter: blur(6px);
+      transition: all 0.3s ease;
+    }
+
+    input {
+      flex: 1;
+      padding: 12px 14px;
+      border-radius: 12px;
+      border: 1px solid var(--input-border);
+      background: var(--input-bg);
+      color: var(--text-primary);
+      font-size: 0.9rem;
+      outline: none;
+      transition: all 0.2s ease;
+    }
+
+    input::placeholder {
+      color: var(--text-tertiary);
+    }
+
+    input:focus {
+      border-color: var(--input-focus);
+      box-shadow: 0 0 0 2px rgba(99,102,241,0.25);
+    }
+
+    button {
+      padding: 12px 16px;
+      border-radius: 12px;
+      border: none;
+      background: var(--button-bg);
+      color: #ffffff;
+      cursor: pointer;
+      font-size: 0.9rem;
+      font-weight: 500;
+      transition: all 0.2s ease;
+    }
+
+    button:hover:not(:disabled) {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(99,102,241,0.4);
+    }
+
+    button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="chat-app">
+    <div class="header">
+      <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">🌙</button>
+      <h1>Yash's AI</h1>
+      <p>Dark. Calm. Intelligent.</p>
+    </div>
+
+    <div class="messages" id="messages">
+      <div class="empty" id="emptyState">
+        <div class="logo">🤖</div>
+        <h2>Yash's AI</h2>
+        <p>Ask anything. I'm listening.</p>
+      </div>
+    </div>
+
+    <form id="aiForm">
+      <input id="prompt" placeholder="Ask something…" required />
+      <button id="sendBtn" type="submit">Send</button>
+    </form>
+  </div>
+
+  <script>
+    const form = document.getElementById("aiForm");
+    const messages = document.getElementById("messages");
+    const input = document.getElementById("prompt");
+    const button = document.getElementById("sendBtn");
+    const empty = document.getElementById("emptyState");
+    const themeToggle = document.getElementById("themeToggle");
+
+    // Theme handling
+    const currentTheme = localStorage.getItem("theme") || "dark";
+    document.documentElement.setAttribute("data-theme", currentTheme);
+    themeToggle.innerText = currentTheme === "dark" ? "🌙" : "☀️";
+
+    themeToggle.addEventListener("click", () => {
+      const theme = document.documentElement.getAttribute("data-theme");
+      const newTheme = theme === "dark" ? "light" : "dark";
+      document.documentElement.setAttribute("data-theme", newTheme);
+      localStorage.setItem("theme", newTheme);
+      themeToggle.innerText = newTheme === "dark" ? "🌙" : "☀️";
+    });
+
+    function addMessage(text, type) {
+      if (empty) empty.remove();
+
+      const bubble = document.createElement("div");
+      bubble.className = `bubble ${type}`;
+      bubble.innerText = text;
+      messages.appendChild(bubble);
+      messages.scrollTop = messages.scrollHeight;
+    }
+
+    function addTyping() {
+      const typing = document.createElement("div");
+      typing.className = "typing";
+      typing.id = "typing";
+      typing.innerText = "AI is thinking…";
+      messages.appendChild(typing);
+      messages.scrollTop = messages.scrollHeight;
+    }
+
+    function removeTyping() {
+      const typing = document.getElementById("typing");
+      if (typing) typing.remove();
+    }
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const prompt = input.value.trim();
+      if (!prompt) return;
+
+      addMessage(prompt, "user");
+      input.value = "";
+      button.disabled = true;
+
+      addTyping();
+
+      try {
+        const res = await fetch("/ai", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ prompt })
+        });
+
+        const data = await res.json();
+        removeTyping();
+
+        if (data.success) {
+          addMessage(data.reply, "ai");
+        } else {
+          addMessage("Something went wrong. Try again.", "ai");
+        }
+      } catch {
+        removeTyping();
+        addMessage("Server error. Please retry.", "ai");
+      } finally {
+        button.disabled = false;
+      }
+    });
+  </script>
+</body>
+</html>
